@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<!--
+The MIT License
+
+Copyright 2019 Len Payne <len.payne@lambtoncollege.ca>.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+-->
+<html>
+    <head>
+        <title>AngularJS Consuming RESTful Services</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- From https://getbootstrap.com/ -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+        <!-- From https://angularjs.org/ -->
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.7/angular.min.js"></script>
+        <script>
+            var pcApp = angular.module('pcApp', []);
+            pcApp.controller('productCodeCtrl', function($scope, $http) {
+                var baseUrl = '/CSD4464-JAX-RS-2019W/api/productCode';
+                $scope.productCodeList = [];
+                function getItems() {
+                    $http.get(baseUrl).then(
+                        function(productCodes){
+                            $scope.productCodeList = productCodes.data;
+                        },
+                        function(error){
+                            alert(error.message);
+                        });
+                }
+                getItems();
+                $scope.addItem = function() {
+                    newProductCode = {
+                        prodCode: $scope.newProdCode,
+                        discountCode: $scope.newDiscountCode,
+                        description: $scope.newDescription,
+                    }
+                    $http.post(baseUrl, newProductCode).then(
+                        function() {
+                            // Timeout needed because updates happen too fast
+                            setTimeout(getItems(), 500);
+                        },
+                        function(error){
+                            alert(error.message);
+                        }
+                    );
+                };
+                
+                $scope.editItem = function() {
+                    editProductCode = {
+                        prodCode: $scope.editProdCode,
+                        discountCode: $scope.editDiscountCode,
+                        description: $scope.editDescription,
+                    };
+                    $http.put(baseUrl + '/' + $scope.editProdCode, editProductCode).then(
+                        function() {
+                            setTimeout(getItems(), 500);
+                        },
+                        function(error){
+                            alert(error.message);
+                        }
+                    );
+                };
+                
+                $scope.delItem = function() {                    
+                    $http.delete(baseUrl + '/' + $scope.delProdCode).then(
+                        function() {
+                            setTimeout(getItems(), 500);
+                        },
+                        function(error){
+                            alert(error.message);
+                        }
+                    );
+                };
+            });
+        </script>
+    </head>
+    <body>
+        <div ng-app="pcApp" class="container">
+            <div class="row" ng-controller="productCodeCtrl">
+                <div class="col-md-6">
+                    <table class="table">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Product Code</th>
+                                <th>Discount Code</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody id="product-table">
+                            <tr ng-repeat="productCode in productCodeList">
+                                <td>{{ productCode.prodCode }}</td>
+                                <td>{{ productCode.discountCode }}</td>
+                                <td>{{ productCode.description }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-6">
+                    <h1>Add Product</h1>
+                    <div class="form-group">
+                        <label>Product Code <input class="form-control" ng-model="newProdCode" /></label>
+                    </div>
+                    <div class="form-group">
+                        <label>Discount Code <input class="form-control" ng-model="newDiscountCode" /></label>
+                    </div>
+                    <div class="form-group">
+                        <label>Description <input class="form-control" ng-model="newDescription" /></label>
+                    </div>
+                    <button class="btn btn-success" ng-click="addItem()">Add</button>
+                    
+                    <h1>Edit Product</h1>
+                    <div class="form-group">
+                        <label>Product Code <input class="form-control" ng-model="editProdCode" /></label>
+                    </div>
+                    <div class="form-group">
+                        <label>Discount Code <input class="form-control" ng-model="editDiscountCode" /></label>
+                    </div>
+                    <div class="form-group">
+                        <label>Description <input class="form-control" ng-model="editDescription" /></label>
+                    </div>
+                    <button class="btn btn-warning" ng-click="editItem()">Edit</button>
+                    
+                    <h1>Delete Product</h1>
+                    <div class="form-group">
+                        <label>Product Code <input class="form-control" ng-model="delProdCode" /></label>
+                    </div>
+                    <button class="btn btn-danger" ng-click="delItem()">Delete</button>
+
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

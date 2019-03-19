@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<!--
+The MIT License
+
+Copyright 2019 Len Payne <len.payne@lambtoncollege.ca>.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+-->
+<html>
+    <head>
+        <title>jQuery Consuming RESTful Services</title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- From https://getbootstrap.com/ -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+
+        <script>
+            $(document).ready(function() {
+                var baseUrl = '/CSD4464-JAX-RS-2019W/api/productCode';
+                function getProducts() {
+                    $.ajax({
+                        url: baseUrl,
+                        method: 'get',
+                        success: function(data) {
+                            table = $('#product-table');
+                            table.html('');
+                            $.each(data, function(idx, item) {
+                                newRow = '<tr><td>' + item.prodCode + '</td><td>' +
+                                        item.discountCode + '</td><td>' +
+                                        item.description + '</td></tr>';
+                                table.append(newRow);
+                            });
+                        },
+                        error: function(err) {
+                            alert(JSON.stringify(err));
+                        }
+                    })
+                }
+                
+                function addProduct() {
+                    newProduct = {
+                        prodCode: $('#add-product-code').val(),
+                        discountCode: $('#add-discount-code').val(),
+                        description: $('#add-description').val(),
+                    };
+                    $.ajax({
+                        url: baseUrl,
+                        data: JSON.stringify(newProduct),  
+                        contentType: 'application/json',
+                        method: 'post',
+                        success: getProducts,
+                        error: function(err) {
+                            alert(JSON.stringify(err));
+                        }
+                    });
+                }
+                
+                function editProduct() {                    
+                    editProduct = {
+                        prodCode: $('#edit-product-code').val(),
+                        discountCode: $('#edit-discount-code').val(),
+                        description: $('#edit-description').val(),
+                    };
+                    $.ajax({
+                        url: baseUrl + '/' + $('#edit-product-code').val(),
+                        data: JSON.stringify(editProduct),  
+                        contentType: 'application/json',
+                        method: 'put',
+                        success: getProducts,
+                        error: function(err) {
+                            alert(JSON.stringify(err));
+                        }
+                    });
+                }
+                
+                function deleteProduct() {
+                    $.ajax({
+                        url: baseUrl + '/' + $('#del-product-code').val(),
+                        method: 'delete',
+                        success: getProducts,
+                        error: function(err) {
+                            alert(JSON.stringify(err));
+                        }
+                    });
+                }
+                
+                getProducts();
+                $('#add-button').click(addProduct);
+                $('#edit-button').click(editProduct);
+                $('#delete-button').click(deleteProduct);
+            });
+        </script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <table class="table">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Product Code</th>
+                                <th>Discount Code</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody id="product-table">                            
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-6">
+                    <h1>Add Product</h1>
+                    <div class="form-group">
+                        <label>Product Code <input class="form-control" id="add-product-code" /></label>
+                    </div>
+                    <div class="form-group">
+                        <label>Discount Code <input class="form-control" id="add-discount-code" /></label>
+                    </div>
+                    <div class="form-group">
+                        <label>Description <input class="form-control" id="add-description" /></label>
+                    </div>
+                    <button class="btn btn-success" id="add-button">Add</button>
+                    
+                    <h1>Edit Product</h1>
+                    <div class="form-group">
+                        <label>Product Code <input class="form-control" id="edit-product-code" /></label>
+                    </div>
+                    <div class="form-group">
+                        <label>Discount Code <input class="form-control" id="edit-discount-code" /></label>
+                    </div>
+                    <div class="form-group">
+                        <label>Description <input class="form-control" id="edit-description" /></label>
+                    </div>
+                    <button class="btn btn-warning" id="edit-button">Edit</button>
+                    
+                    <h1>Delete Product</h1>
+                    <div class="form-group">
+                        <label>Product Code <input class="form-control" id="del-product-code" /></label>
+                    </div>
+                    <button class="btn btn-danger" id="delete-button">Delete</button>
+
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

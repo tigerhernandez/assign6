@@ -36,7 +36,7 @@ import javax.persistence.Table;
  * @author Len Payne <len.payne@lambtoncollege.ca>
  */
 @NamedQueries(
-        @NamedQuery(name = "findOne", query = "SELECT p FROM ProductCode p WHERE prodCode = :prodCode"))
+        @NamedQuery(name = "findOne", query = "SELECT p FROM ProductCode p WHERE p.prodCode = :prodCode"))
 @Entity
 @Table(name = "PRODUCT_CODE")
 public class ProductCode {
