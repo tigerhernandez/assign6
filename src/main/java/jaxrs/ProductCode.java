@@ -23,12 +23,18 @@
  */
 package jaxrs;
 
+import java.util.Collection;
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * Product Code Entity Class. Note we needed to use @Table and @Column annotations
@@ -40,11 +46,15 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "PRODUCT_CODE")
 public class ProductCode {
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "DISCOUNT_CODE")
+    private Character discountCode;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "productCode")
+    private Collection<Product> productCollection;
     @Id
     @Column(name = "PROD_CODE")
     private String prodCode;
-    @Column(name = "DISCOUNT_CODE")
-    private String discountCode;
     @Column(name = "DESCRIPTION")
     private String description;
 
@@ -56,13 +66,7 @@ public class ProductCode {
         this.prodCode = prodCode;
     }
 
-    public String getDiscountCode() {
-        return discountCode;
-    }
-
-    public void setDiscountCode(String discountCode) {
-        this.discountCode = discountCode;
-    }
+   
 
     public String getDescription() {
         return description;
@@ -70,6 +74,26 @@ public class ProductCode {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public ProductCode() {
+    }
+
+    public Character getDiscountCode() {
+        return discountCode;
+    }
+
+    public void setDiscountCode(Character discountCode) {
+        this.discountCode = discountCode;
+    }
+
+    @XmlTransient
+    public Collection<Product> getProductCollection() {
+        return productCollection;
+    }
+
+    public void setProductCollection(Collection<Product> productCollection) {
+        this.productCollection = productCollection;
     }
     
 }

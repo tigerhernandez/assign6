@@ -1,0 +1,109 @@
+{
+	"info": {
+		"_postman_id": "21d8c5d4-6e9b-4efa-add6-221b167c1ab2",
+		"name": "Assign6",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost:8080/CSD4464-JAX-RS-2019W/api/product",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/xml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": " <product>\n        <available>TRUE</available>\n        <description>Lord of the nights watch.</description>\n        <manufacturerId>\n            <addressline1>5 81st Street</addressline1>\n            <addressline2>Suite 100</addressline2>\n            <city>Mountain View</city>\n            <email>happysearching@example.com</email>\n            <fax>408-555-0103</fax>\n            <manufacturerId>19985678</manufacturerId>\n            <name>Happy End Searching</name>\n            <phone>650-555-0102</phone>\n            <rep>John Snow</rep>\n            <state>CA</state>\n            <zip>94043</zip>\n        </manufacturerId>\n        <markup>9.25</markup>\n        <productCode>\n            <description>Software</description>\n            <discountCode>77</discountCode>\n            <prodCode>SW</prodCode>\n        </productCode>\n        <productId>999999</productId>\n        <purchaseCost>1195.00</purchaseCost>\n        <quantityOnHand>900000</quantityOnHand>\n    </product>"
+				},
+				"url": {
+					"raw": "http://localhost:8080/CSD4464-JAX-RS-2019W/api/product",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"CSD4464-JAX-RS-2019W",
+						"api",
+						"product"
+					]
+				},
+				"description": "Adding product to products table."
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/CSD4464-JAX-RS-2019W/api/manufacturer/123456789",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/xml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8080/CSD4464-JAX-RS-2019W/api/manufacturer/123456789",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"CSD4464-JAX-RS-2019W",
+						"api",
+						"manufacturer",
+						"123456789"
+					]
+				},
+				"description": "Deleting a manufacturer."
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/CSD4464-JAX-RS-2019W/api/productCode/SW",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "  {\n        \"description\": \"Software2\",\n        \"discountCode\": \"MM\",\n        \"prodCode\": \"SW\"\n    }"
+				},
+				"url": {
+					"raw": "http://localhost:8080/CSD4464-JAX-RS-2019W/api/productCode/SW",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"CSD4464-JAX-RS-2019W",
+						"api",
+						"productCode",
+						"SW"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
